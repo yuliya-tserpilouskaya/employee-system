@@ -1,4 +1,5 @@
-﻿using EmployeeManagementSystem.Core.DomainModels;
+﻿using AutoMapper;
+using EmployeeManagementSystem.Core.DomainModels;
 using EmployeeManagementSystem.Core.Dto;
 using EmployeeManagementSystem.Core.Entities;
 using EmployeeManagementSystem.Core.Interfaces;
@@ -8,15 +9,17 @@ namespace EmployeeManagementSystem.Core.BusinessLogic;
 public class EmployeeService : IEmployeeService
 {
     private readonly IAsyncRepository<Employee> _employeeRepository;
+    private readonly IMapper _mapper;
 
-    public EmployeeService(IAsyncRepository<Employee> employeeRepository)
+    public EmployeeService(IAsyncRepository<Employee> employeeRepository, IMapper mapper)
     {
         _employeeRepository = employeeRepository;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Employee>> GetEmployeesAsync()
+    public async Task<IReadOnlyCollection<EmployeeDto>> GetEmployeesAsync()
     {
-        return  await _employeeRepository.ListAllAsync();
+        return _mapper.Map<IReadOnlyCollection<EmployeeDto>>(await _employeeRepository.ListAllAsync());
     }
 
     public async Task<Result> CreateEmployeeAsync(EmployeeDto employee)

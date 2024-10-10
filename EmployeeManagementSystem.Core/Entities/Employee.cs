@@ -15,11 +15,8 @@ public class Employee : BaseEntity
     }
 
     public string FirstName { get; private set; }
-
     public string LastName { get; private set; }
-
     public int Age { get; private set; }
-
     public Sex Sex { get; private set; }
     
     public static DataResult<Employee> Create(string firstName, string lastName, int? age, Sex? sex)

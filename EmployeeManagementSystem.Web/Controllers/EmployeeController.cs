@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using EmployeeManagementSystem.Core.Dto;
-using EmployeeManagementSystem.Core.Entities;
 using EmployeeManagementSystem.Core.Interfaces;
 using EmployeeManagementSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace EmployeeManagementSystem.Web.Controllers;
 
@@ -21,34 +21,46 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EmployeeModel>>> GetEmployees()
+    [ProducesResponseType(typeof(IReadOnlyCollection<EmployeeModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetEmployees()
     {
         return Ok(await _employeeService.GetEmployeesAsync());
     }
 
     [HttpPost]
-    public async Task<ActionResult<Employee>> CreateEmployee([FromBody] EmployeeModel employee)
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeModel employee)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        return Ok(await _employeeService.CreateEmployeeAsync(_mapper.Map<EmployeeDto>(employee)));
+        var result = await _employeeService.CreateEmployeeAsync(_mapper.Map<EmployeeDto>(employee));
+
+        return result.Succeed ? Ok() : BadRequest();
     }
 
     [HttpPut]
-
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeModel employee)
     {
-        await _employeeService.UpdateEmployeeAsync(_mapper.Map<EmployeeDto>(employee));
-        return NoContent();
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _employeeService.UpdateEmployeeAsync(_mapper.Map<EmployeeDto>(employee));
+
+        return result.Succeed ? Ok() : BadRequest();
     }
 
     [HttpDelete]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> DeleteEmployee([FromBody] IEnumerable<Guid> ids)
     {
-        var employee = await _employeeService.DeleteEmployeesAsync(ids);
-        return NoContent();
+        var result = await _employeeService.DeleteEmployeesAsync(ids);
+
+        return result.Succeed ? Ok() : BadRequest();
     }
 }

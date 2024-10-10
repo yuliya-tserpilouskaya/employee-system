@@ -1,41 +1,55 @@
-using EmployeeManagementSystem.Core.BusinessLogic;
-using EmployeeManagementSystem.Core.Interfaces;
+using EmployeeManagementSystem.Core;
+using EmployeeManagementSystem.Infrastructure;
 using EmployeeManagementSystem.Infrastructure.Data;
 using EmployeeManagementSystem.Web.Mappings;
-using Microsoft.EntityFrameworkCore;
+using EmployeeManagementSystem.Web.Middlewares;
+using Microsoft.OpenApi.Models;
+using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("EMSDatabase");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString,
-    builderOptions => builderOptions.MigrationsAssembly("EmployeeManagementSystem.Infrastructure")));
-
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped(typeof(IAsyncRepository<>), typeof(GenericRepository<>));
-
+builder.Services
+    .AddCoreDependencyInjection(builder.Configuration)
+    .AddInfrastructureDependencyInjection(builder.Configuration);
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options
+        .SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "Employee management system",
+            Version = "v1"
+        });
+});
 builder.Services.AddAutoMapper(typeof(EmployeeMapping));
+
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.SetMinimumLevel(LogLevel.Trace);
+});
+
+builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 
 var app = builder.Build();
 
+var logger = NLog.LogManager.GetCurrentClassLogger();
 using (var scope = app.Services.CreateScope())
 {
-    //try
-    //{ TODO: logger
+    try
+    {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await ApplicationDbContextSeed.SeedAsync(dbContext);
-    //}
-    //catch (Exception ex)
-    //{
-    //    logger.Error(ex, "An error occurred seeding the DB.");
-    //}
-
-    
+        logger.Warn("ldldldld");
+    }
+    catch (Exception ex)
+    {
+        logger.Error(ex, "An error occurred seeding the DB.");
+    }
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
@@ -44,6 +58,9 @@ app.UseStaticFiles();
 app.MapControllers();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee management system");
+    });
 
 app.Run();
