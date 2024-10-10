@@ -8,6 +8,8 @@ namespace EmployeeManagementSystem.Infrastructure.Data;
 
 public static class ApplicationDbContextSeed
 {
+    public const int RetryNumber = 3;
+
     public static async Task SeedAsync(ApplicationDbContext context, int? retry = 0)
     {
         var retryForAvailability = retry.Value;
@@ -24,7 +26,7 @@ public static class ApplicationDbContextSeed
         }
         catch (Exception)
         {
-            if (retryForAvailability < 3)
+            if (retryForAvailability < RetryNumber)
             {
                 retryForAvailability++;
                 await SeedAsync(context, retryForAvailability);
