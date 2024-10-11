@@ -6,7 +6,21 @@ using EmployeeManagementSystem.Web.Middlewares;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:3000",
+                "http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
 builder.Services
     .AddCoreDependencyInjection(builder.Configuration)
@@ -41,7 +55,6 @@ using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await ApplicationDbContextSeed.SeedAsync(dbContext);
-        logger.Warn("ldldldld");
     }
     catch (Exception ex)
     {
@@ -52,7 +65,7 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
-
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();

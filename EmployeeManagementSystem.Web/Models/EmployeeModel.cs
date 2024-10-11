@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using EmployeeManagementSystem.Core.Constants;
 using EmployeeManagementSystem.Core.Enumerations;
 
@@ -18,5 +19,6 @@ public class EmployeeModel
     public int Age { get; set; }
 
     [Required]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Sex Sex { get; set; }
 }
