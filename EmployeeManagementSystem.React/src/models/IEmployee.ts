@@ -1,10 +1,9 @@
-// src/models/IEmployee.ts
-import { Sex } from "../constants/constants"; // Adjust the import path accordingly
+import { SexEnum } from "../constants/SexEnum";
 
 export interface IEmployee {
-    id?: string; // Optional property
+    id?: string;
     firstName: string;
     lastName: string;
     age: number;
-    sex: Sex;
+    sex: SexEnum;
 }

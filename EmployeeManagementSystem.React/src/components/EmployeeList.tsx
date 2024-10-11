@@ -1,8 +1,6 @@
-// src/components/EmployeeList.tsx
-
 import React, { useState } from 'react';
 import { IEmployee } from '../models/IEmployee';
-import { Sex } from '../constants/constants'; // Import the Sex enum
+import {SexNames} from '../constants/SexEnum'; // Import the Sex enum
 
 interface EmployeeListProps {
     employees: IEmployee[];
@@ -28,20 +26,6 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
         }
     };
 
-    const renderSex = (sex: string) => {
-        switch (sex) {
-            case Sex.Male:
-                return 'Male';
-            case Sex.Female:
-                return 'Female';
-            case Sex.Other:
-                return 'Other';
-            case Sex.PreferNotToSay:
-            default:
-                return 'Prefer not to say';
-        }
-    };
-
     return (
         <div>
             <h2>Employee List</h2>
@@ -56,7 +40,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
                             <th>Name</th>
                             <th>Age</th>
                             <th>Gender</th>
-                            <th>Actions</th> {/* Add Actions column */}
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -71,7 +55,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
                                 </td>
                                 <td>{`${employee.firstName} ${employee.lastName}`}</td>
                                 <td>{`${employee.age} years`}</td>
-                                <td>{renderSex(employee.sex)}</td>
+                                <td>{SexNames.get(employee.sex)}</td>
                                 <td>
                                     <button onClick={() => onEdit(employee)}>Edit</button>
                                 </td>

@@ -1,18 +1,14 @@
 import { IEmployee } from '../models/IEmployee';
+import {EmployeeUrl} from "../constants/UrlsConstants";
 
-const API_URL = "https://localhost:7285/api/Employee";
-
-// Function to get all employees
 const getEmployees = async (): Promise<IEmployee[]> => {
-    const response = await fetch(API_URL);
+    const response = await fetch(EmployeeUrl);
     if (!response.ok) throw new Error('Failed to fetch employees');
     return response.json();
 };
 
-// Function to create a new employee
 const createEmployee = async (employee: Omit<IEmployee, 'id'>): Promise<void> => {
-    console.log(employee)
-    const response = await fetch(API_URL, {
+    const response = await fetch(EmployeeUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -26,9 +22,8 @@ const createEmployee = async (employee: Omit<IEmployee, 'id'>): Promise<void> =>
     }
 };
 
-// Function to update an existing employee
 const updateEmployee = async (employee: IEmployee): Promise<void> => {
-    const response = await fetch(`${API_URL}`, {
+    const response = await fetch(`${EmployeeUrl}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -42,9 +37,8 @@ const updateEmployee = async (employee: IEmployee): Promise<void> => {
     }
 };
 
-// Function to delete employees
 const deleteEmployees = async (ids: string[]): Promise<void> => {
-    const response = await fetch(API_URL, {
+    const response = await fetch(EmployeeUrl, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -58,5 +52,4 @@ const deleteEmployees = async (ids: string[]): Promise<void> => {
     }
 };
 
-// Export functions as named exports
 export { getEmployees, createEmployee, updateEmployee, deleteEmployees };

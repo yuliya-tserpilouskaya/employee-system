@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { IEmployee } from "../models/IEmployee";
-import { createEmployee, updateEmployee } from "../services/EmployeeService";
-import { Sex } from "../constants/constants";
+import React, {useEffect, useState} from "react";
+import {IEmployee} from "../models/IEmployee";
+import {createEmployee, updateEmployee} from "../services/EmployeeService";
+import {SexEnum} from "../constants/SexEnum";
 
 interface EmployeeFormProps {
     existingEmployee?: IEmployee;
     onSubmit: () => void;
 }
 
-const EmployeeForm: React.FC<EmployeeFormProps> = ({ existingEmployee, onSubmit }) => {
+const EmployeeForm: React.FC<EmployeeFormProps> = ({existingEmployee, onSubmit}) => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [age, setAge] = useState<number>(18); // Default age to 18
-    const [sex, setSex] = useState<Sex>(Sex.PreferNotToSay); // Default to "Prefer not to say"
+    const [sex, setSex] = useState<SexEnum>(SexEnum.PreferNotToSay); // Default to "Prefer not to say"
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ existingEmployee, onSubmit 
             setFirstName("");
             setLastName("");
             setAge(18); // Reset to default age when there is no existing employee
-            setSex(Sex.PreferNotToSay); // Reset to "Prefer not to say"
+            setSex(SexEnum.PreferNotToSay); // Reset to "Prefer not to say"
         }
     }, [existingEmployee]);
 
@@ -42,7 +42,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ existingEmployee, onSubmit 
 
         try {
             if (existingEmployee) {
-                await updateEmployee({ ...employee, id: existingEmployee.id });
+                await updateEmployee({...employee, id: existingEmployee.id});
             } else {
                 await createEmployee(employee); // ID is not needed for creation
             }
@@ -65,30 +65,50 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ existingEmployee, onSubmit 
                 type="text"
                 placeholder="First Name"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                        setFirstName(value)
+                    }
+                }}
                 required
             />
             <input
                 type="text"
                 placeholder="Last Name"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                        setLastName(value)
+                    }
+                }}
                 required
             />
             <input
                 type="number"
                 placeholder="Age"
                 value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                        setAge(Number(value))
+                    }
+                }}
                 min={18}
                 max={100}
                 required
             />
-            <select value={sex} onChange={(e) => setSex(e.target.value as Sex)}>
-                <option value={Sex.Male}>Male</option>
-                <option value={Sex.Female}>Female</option>
-                <option value={Sex.Other}>Other</option>
-                <option value={Sex.PreferNotToSay}>Prefer not to say</option>
+            <select value={sex} onChange={(e) => {
+                const value = e.target.value;
+                if (value) {
+                    setSex(Number(value))
+                }
+            }}>
+                <option value={SexEnum.Male}>Male</option>
+                <option value={SexEnum.Female}>Female</option>
+                <option value={SexEnum.Other}>Other</option>
+                <option value={SexEnum.PreferNotToSay}>Prefer not to say</option>
             </select>
             <button type="submit">{existingEmployee ? "Update Employee" : "Add Employee"}</button>
         </form>
