@@ -41,3 +41,7 @@ To perform the task, you can use APIs with .NET Core or MVC Web APIs, not in pri
 - React 18.3.1
 - TypeScript 
 - Hooks: useState, useEffect
+
+  # Visual:
+
+![image](https://github.com/user-attachments/assets/e4881185-31b0-406a-9fa4-3e76f739dd39)
