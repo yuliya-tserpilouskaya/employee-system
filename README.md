@@ -36,4 +36,8 @@ To perform the task, you can use APIs with .NET Core or MVC Web APIs, not in pri
 - AutoMapper
 - Bogus
 - Swagger specification
-  
+
+  # Frontend:
+- React 18.3.1
+- TypeScript 
+- Hooks: useState, useEffect
