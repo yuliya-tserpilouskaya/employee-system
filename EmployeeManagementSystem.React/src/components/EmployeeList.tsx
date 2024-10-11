@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { IEmployee } from '../models/IEmployee';
-import {SexNames} from '../constants/SexEnum'; // Import the Sex enum
+import { SexNames } from '../constants/SexEnum';
 
 interface EmployeeListProps {
     employees: IEmployee[];
     onDelete: (ids: string[]) => Promise<void>;
-    onEdit: (employee: IEmployee) => void; // Accept an edit function
+    onEdit: (employee: IEmployee) => void;
 }
 
 const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit }) => {
@@ -22,17 +22,27 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
     const handleDelete = async () => {
         if (window.confirm("Are you sure you want to delete the selected employees?")) {
             await onDelete(selectedIds);
-            setSelectedIds([]); // Clear selected IDs after deletion
+            setSelectedIds([]);
         }
     };
 
     return (
         <div>
-            <h2>Employee List</h2>
+            <div className="employee-list-header">
+                <h2 className="employee-list-title">Employee List</h2>
+                {selectedIds.length > 0 && (
+                    <button
+                        onClick={handleDelete}
+                        className="red-button"
+                    >
+                        Remove Selected
+                    </button>
+                )}
+            </div>
             {employees.length === 0 ? (
                 <p>No employees available.</p>
             ) : (
-                <div>
+                <div className="employee-list-container">
                     <table>
                         <thead>
                         <tr>
@@ -45,7 +55,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
                         </thead>
                         <tbody>
                         {employees.map((employee, index) => (
-                            <tr key={employee.id} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#fff' }}>
+                            <tr key={employee.id} className={index % 2 === 0 ? 'table-row-even' : 'table-row-odd'}>
                                 <td>
                                     <input
                                         type="checkbox"
@@ -63,9 +73,6 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ employees, onDelete, onEdit
                         ))}
                         </tbody>
                     </table>
-                    {selectedIds.length > 0 && (
-                        <button onClick={handleDelete}>Remove Selected</button>
-                    )}
                 </div>
             )}
         </div>

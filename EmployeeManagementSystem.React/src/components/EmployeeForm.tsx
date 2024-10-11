@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {IEmployee} from "../models/IEmployee";
 import {createEmployee, updateEmployee} from "../services/EmployeeService";
 import {SexEnum} from "../constants/SexEnum";
+import {AgeConstants} from "../constants/AgeConstants";
 
 interface EmployeeFormProps {
     existingEmployee?: IEmployee;
@@ -11,8 +12,8 @@ interface EmployeeFormProps {
 const EmployeeForm: React.FC<EmployeeFormProps> = ({existingEmployee, onSubmit}) => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
-    const [age, setAge] = useState<number>(18); // Default age to 18
-    const [sex, setSex] = useState<SexEnum>(SexEnum.PreferNotToSay); // Default to "Prefer not to say"
+    const [age, setAge] = useState<number>(AgeConstants.MinAge);
+    const [sex, setSex] = useState<SexEnum>(SexEnum.PreferNotToSay);
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
@@ -20,38 +21,38 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({existingEmployee, onSubmit})
             setFirstName(existingEmployee.firstName);
             setLastName(existingEmployee.lastName);
             setAge(existingEmployee.age);
-            setSex(existingEmployee.sex); // Retain the existing employee's gender
+            setSex(existingEmployee.sex);
         } else {
             setFirstName("");
             setLastName("");
-            setAge(18); // Reset to default age when there is no existing employee
-            setSex(SexEnum.PreferNotToSay); // Reset to "Prefer not to say"
+            setAge(AgeConstants.MinAge);
+            setSex(SexEnum.PreferNotToSay);
         }
     }, [existingEmployee]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        setError(""); // Clear previous errors
+        setError("");
 
         const employee: IEmployee = {
             firstName,
             lastName,
             age,
-            sex, // Use the selected sex value
+            sex,
         };
 
         try {
             if (existingEmployee) {
                 await updateEmployee({...employee, id: existingEmployee.id});
             } else {
-                await createEmployee(employee); // ID is not needed for creation
+                await createEmployee(employee);
             }
-            onSubmit(); // Refresh the employee list
-        } catch (error: unknown) { // Specify the type as unknown
+            onSubmit();
+        } catch (error: unknown) {
             if (error instanceof Error) {
-                setError(error.message); // Set error message for user feedback
+                setError(error.message);
             } else {
-                setError("An unexpected error occurred."); // Fallback for unexpected errors
+                setError("An unexpected error occurred.");
             }
             console.error(error);
         }
@@ -95,8 +96,8 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({existingEmployee, onSubmit})
                         setAge(Number(value))
                     }
                 }}
-                min={18}
-                max={100}
+                min={AgeConstants.MinAge}
+                max={AgeConstants.MaxAge}
                 required
             />
             <select value={sex} onChange={(e) => {

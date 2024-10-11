@@ -3,6 +3,7 @@ import EmployeeForm from "./components/EmployeeForm";
 import EmployeeList from "./components/EmployeeList";
 import { IEmployee } from "./models/IEmployee";
 import * as employeeService from "./services/EmployeeService";
+import './styles/styles.css';
 
 const App: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -28,11 +29,11 @@ const App: React.FC = () => {
     };
 
     const handleEdit = (employee: IEmployee) => {
-        setEditingEmployee(employee); // Set the employee to be edited
+        setEditingEmployee(employee);
     };
 
     const handleSubmit = () => {
-        setEditingEmployee(undefined); // Clear the editing state after submission
+        setEditingEmployee(undefined);
         refreshEmployeeList();
     };
 
