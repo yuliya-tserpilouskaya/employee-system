@@ -26,3 +26,18 @@ Design requirements:
 6) in case of deleting one or more items from the list, the user should be asked to confirm this action.
  
 To perform the task, you can use APIs with .NET Core or MVC Web APIs, not in principle. React application should be written using hooks, applying Redux is optional.
+
+# Backend:
+- Onion architecture (Core variation)
+- .Net 8
+- MsSql Db (Sql Server 16)
+- EntityFrameworkCore
+- Nlog
+- AutoMapper
+- Bogus
+- Swagger specification
+
+  # Frontend:
+- React 18.3.1
+- TypeScript 
+- Hooks: useState, useEffect
