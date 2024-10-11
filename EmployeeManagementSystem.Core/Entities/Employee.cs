@@ -6,6 +6,7 @@ namespace EmployeeManagementSystem.Core.Entities;
 
 public class Employee : BaseEntity
 {
+    public Employee() { }
     private Employee(Guid id, string firstName, string lastName, int age, Sex sex) : base(id)
     {
         FirstName = firstName;

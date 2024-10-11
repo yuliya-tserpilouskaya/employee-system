@@ -4,6 +4,7 @@ namespace EmployeeManagementSystem.Core.Entities;
 
 public abstract class BaseEntity
 {
+    protected BaseEntity() {}
     protected BaseEntity(Guid id)
     {
         Id = id;
